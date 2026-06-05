@@ -2,7 +2,38 @@
   "permissions": {
     "allow": [
       "Bash(npx --yes create-next-app@latest . --typescript --tailwind --app --eslint --src-dir --import-alias \"@/*\" --use-npm --no-turbopack)",
-      "Bash(mv /c/Users/vici0/projects/ksii/.CLAUDE.md.bak /c/Users/vici0/projects/CLAUDE.md.ksii.bak && ls -la /c/Users/vici0/projects/ksii)"
+      "Bash(mv /c/Users/vici0/projects/ksii/.CLAUDE.md.bak /c/Users/vici0/projects/CLAUDE.md.ksii.bak && ls -la /c/Users/vici0/projects/ksii)",
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "Bash(git check-ignore *)",
+      "Read(//c/Users/vici0/AppData/Local/Temp/claude/C--Users-vici0-projects-ksii/d4230c9a-c531-40c5-a9e8-164a766694ad/tasks/**)",
+      "Bash(curl -sS -o /tmp/page.html -w \"HTTP %{http_code}\\\\nTime: %{time_total}s\\\\n\" http://localhost:3000/)",
+      "Read(//tmp/**)",
+      "Bash(curl -sS -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(taskkill //PID 30408 //F)",
+      "Bash(netstat -ano)",
+      "Bash(npx --yes shadcn@latest init -d -y)",
+      "Bash(taskkill //PID 25152 //F)",
+      "Bash(curl -sS -o /tmp/page2.html -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(taskkill //PID 28092 //F)",
+      "Bash(curl -sS -o /tmp/page3.html -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/)",
+      "WebFetch(domain:greenlabs.co.kr)",
+      "Bash(taskkill //PID 37384 //F)",
+      "Bash(curl -sS -o /tmp/landing.html -w \"HTTP %{http_code} size=%{size_download} bytes\\\\n\" http://localhost:3000/)",
+      "Bash(find /c/Users/vici0/AppData/Local/Temp/ -type f \\\\\\( -iname \"*.png\" -o -iname \"*.jpg\" -o -iname \"*.jpeg\" -o -iname \"*.webp\" \\\\\\) -mmin -10 2>/dev/null | head -10)",
+      "Bash(find /c/Users/vici0/AppData/Local/Temp/ -type f -mmin -5 2>/dev/null | head -20)",
+      "Bash(ls -la /c/Users/vici0/AppData/Local/Temp/*.png /c/Users/vici0/AppData/Local/Temp/*.jpg /c/Users/vici0/AppData/Local/Temp/*.jpeg /c/Users/vici0/AppData/Local/Temp/*.webp 2>/dev/null | tail -10; echo \"---\"; ls -la /c/Users/vici0/AppData/Local/Temp/claude/ 2>/dev/null | head -20)",
+      "Bash(ls -lat /c/Users/vici0/Pictures/ 2>/dev/null | head -10; echo \"---Downloads---\"; ls -lat /c/Users/vici0/Downloads/ 2>/dev/null | head -10; echo \"---Desktop---\"; ls -lat /c/Users/vici0/Desktop/ 2>/dev/null | head -10; echo \"---Clipboard/Screenshots---\"; ls -lat /c/Users/vici0/Pictures/Screenshots/ 2>/dev/null | head -10)",
+      "Bash(curl -sS -o /tmp/about_check.html -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -sS -o /tmp/biz_check.html -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -sS -o /tmp/biz3.html -w \"HTTP %{http_code}  size=%{size_download}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -sS -o /tmp/biz_img.html -w \"Page HTTP %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -sS -o /dev/null -w \"subsidy:    %{http_code}  %{content_type}  %{size_download} bytes\\\\n\" http://localhost:3000/business-subsidy.png)",
+      "Bash(curl -sS -o /dev/null -w \"networking: %{http_code}  %{content_type}  %{size_download} bytes\\\\n\" http://localhost:3000/business-networking.png)",
+      "Bash(curl -sS -o /dev/null -w \"policy:     %{http_code}  %{content_type}  %{size_download} bytes\\\\n\" http://localhost:3000/business-policy.png)",
+      "Bash(awk '{print $5}')",
+      "Bash(npm run *)",
+      "Bash(git add *)"
     ]
   }
 }

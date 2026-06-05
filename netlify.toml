@@ -1,0 +1,14 @@
+# Netlify 빌드/배포 설정 — Next.js 16 + Supabase SSR
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  # Next.js 16은 Node 20+ 필요. 최신 LTS 명시.
+  NODE_VERSION = "22"
+
+# Netlify가 Next.js를 자동 감지하고 @netlify/plugin-nextjs를 적용함.
+# 명시적으로 선언해 둠 (proxy.ts/middleware를 Edge Function으로 배포).
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

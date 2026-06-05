@@ -1,26 +1,197 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "pretendard/dist/web/variable/pretendardvariable.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-heading: var(--font-sans);
+
+  /* 브랜드 색상 — 디자인 시스템 */
+  --color-navy: #1f2d3d;        /* primary: 텍스트, 헤더 */
+  --color-teal: #0098aa;        /* accent: CTA, 링크, 강조 */
+  --color-ivory: #f5e8e4;       /* section background */
+  --color-blush: #d9b8b8;       /* secondary accent */
+  --color-mute: #a89faa;        /* muted: 보조 텍스트 */
+
+  /* shadcn 시스템 토큰 (브랜드 색에 매핑됨) */
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+
+  /* 둥근 모서리 — 작게 유지 (캐주얼하지 않도록) */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  /* 폰트 */
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system,
+    BlinkMacSystemFont, system-ui, Roboto, "Segoe UI", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+  /* 기본 색 (shadcn 시스템) — 브랜드 매핑 */
+  --background: #ffffff;
+  --foreground: #1f2d3d;                   /* navy */
+  --card: #ffffff;
+  --card-foreground: #1f2d3d;
+  --popover: #ffffff;
+  --popover-foreground: #1f2d3d;
+  --primary: #0098aa;                      /* teal — 기본 CTA 색 */
+  --primary-foreground: #ffffff;
+  --secondary: #f5e8e4;                    /* ivory */
+  --secondary-foreground: #1f2d3d;
+  --muted: #f5e8e4;
+  --muted-foreground: #a89faa;             /* mute */
+  --accent: #f5e8e4;
+  --accent-foreground: #1f2d3d;
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: rgba(31, 45, 61, 0.1);         /* navy 10% — 매우 옅은 보더 */
+  --input: rgba(31, 45, 61, 0.15);
+  --ring: #0098aa;
+
+  --chart-1: #0098aa;
+  --chart-2: #1f2d3d;
+  --chart-3: #d9b8b8;
+  --chart-4: #a89faa;
+  --chart-5: #f5e8e4;
+
+  --radius: 0.375rem;                       /* 6px — 디자인 원칙 */
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: #1f2d3d;
+  --sidebar-primary: #0098aa;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f5e8e4;
+  --sidebar-accent-foreground: #1f2d3d;
+  --sidebar-border: rgba(31, 45, 61, 0.1);
+  --sidebar-ring: #0098aa;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* 타이포그래피 기본값 — 큰 헤딩 + 작은 본문 대비 */
+  h1 {
+    @apply text-4xl font-bold tracking-tight md:text-5xl;
+  }
+  h2 {
+    @apply text-3xl font-bold tracking-tight;
+  }
+  h3 {
+    @apply text-xl font-semibold;
+  }
+  h4 {
+    @apply text-lg font-semibold;
+  }
+  p {
+    @apply leading-relaxed;
+  }
+
+  /* 영문 부제목 (카테고리 라벨) — "WHAT WE DO" 같은 용도 */
+  .eyebrow {
+    @apply text-xs font-medium uppercase tracking-[0.2em] text-teal;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* SectionReveal 페이드인 업 (IntersectionObserver로 트리거) */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal-hidden {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+.reveal-visible {
+  animation: fade-in-up 800ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Hero 스크롤 인디케이터 — 세로 라인이 위→아래로 흐름 */
+@keyframes scroll-line {
+  0% {
+    transform: scaleY(0);
+    transform-origin: top;
+  }
+  45% {
+    transform: scaleY(1);
+    transform-origin: top;
+  }
+  55% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+}
+
+.animate-scroll-line {
+  animation: scroll-line 2.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+/* 점 패턴 — 풀블리드 섹션 배경의 텍스처 */
+.dot-pattern {
+  background-image: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.08) 1px,
+    transparent 1px
+  );
+  background-size: 28px 28px;
 }
