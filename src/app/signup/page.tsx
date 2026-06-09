@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckCircle2, Upload } from "lucide-react";
+import { AlertCircle, CheckCircle2, Upload } from "lucide-react";
 
 import {
   signupSchema,
@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import { submitSignup } from "./actions";
 
 // 단순 섹션 헤딩 — "— 01 / 계정 정보"
 function SectionHeading({ no, title }: { no: string; title: string }) {
@@ -36,8 +37,11 @@ function SectionHeading({ no, title }: { no: string; title: string }) {
 }
 
 export default function SignupPage() {
-  // 제출 결과(Phase 1에서는 검증 통과 여부만 표시)
-  const [submitted, setSubmitted] = useState<null | SignupFormValues>(null);
+  // 제출 결과 — 성공 시 회사명 보관, 실패 시 에러 메시지 보관
+  const [submitted, setSubmitted] = useState<{ companyName: string } | null>(
+    null,
+  );
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -62,18 +66,43 @@ export default function SignupPage() {
     },
   });
 
-  function onSubmit(data: SignupFormValues) {
-    // Phase 1 — 검증 통과 데이터를 콘솔에 출력. Phase 3에서 실제 제출 로직 연결.
-    console.log("[SIGNUP/Phase1] 검증 통과:", {
-      ...data,
-      businessCert: `${data.businessCert.name} (${Math.round(
-        data.businessCert.size / 1024,
-      )}KB, ${data.businessCert.type})`,
-    });
-    setSubmitted(data);
+  async function onSubmit(data: SignupFormValues) {
+    setSubmitError(null);
+
+    // FormData 직렬화 (Server Action에 파일 + 모든 필드 전달)
+    const fd = new FormData();
+    fd.set("brn", data.brn);
+    fd.set("password", data.password);
+    fd.set("passwordConfirm", data.passwordConfirm);
+    fd.set("companyName", data.companyName);
+    fd.set("corpRegNumber", data.corpRegNumber ?? "");
+    fd.set("ceoName", data.ceoName);
+    fd.set("businessType", data.businessType);
+    fd.set("businessItem", data.businessItem);
+    fd.set("companyEmail", data.companyEmail);
+    fd.set("contactName", data.contactName);
+    fd.set("contactRole", data.contactRole);
+    fd.set("contactEmail", data.contactEmail);
+    fd.set("contactPhone", data.contactPhone);
+    fd.set("businessCert", data.businessCert);
+    fd.set("agreeTerms", String(data.agreeTerms));
+    fd.set("agreePrivacy", String(data.agreePrivacy));
+    fd.set("agreeMarketing", String(data.agreeMarketing));
+
+    const result = await submitSignup(fd);
+
+    if (result.ok) {
+      setSubmitted({ companyName: result.companyName });
+    } else {
+      setSubmitError(result.error);
+      // 페이지 상단으로 스크롤해서 에러 메시지 보이게
+      if (typeof window !== "undefined") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
   }
 
-  // 제출 완료 화면 (검증 통과 후)
+  // 제출 완료 화면
   if (submitted) {
     return (
       <main className="min-h-screen bg-white">
@@ -81,45 +110,23 @@ export default function SignupPage() {
           <div className="rounded-md border border-mute/20 bg-white p-10 text-center md:p-14">
             <CheckCircle2 className="mx-auto h-14 w-14 text-teal" />
             <h1 className="mt-6 text-2xl font-bold text-navy md:text-3xl">
-              입력 검증 완료
+              가입 신청이 접수되었습니다
             </h1>
-            <p className="mt-4 text-sm text-navy/70 md:text-base">
-              모든 필드가 정상적으로 입력되었습니다.
-              <br />
-              실제 제출 처리는 다음 단계(Phase 3)에서 연결됩니다.
-            </p>
-            <div className="mt-6 rounded-md bg-ivory p-4 text-left text-xs leading-relaxed text-navy/70">
-              <p>
-                <span className="font-medium text-navy">법인명:</span>{" "}
+            <p className="mt-6 text-sm leading-relaxed text-navy/70 md:text-base">
+              <span className="font-medium text-navy">
                 {submitted.companyName}
-              </p>
-              <p>
-                <span className="font-medium text-navy">사업자번호:</span>{" "}
-                {submitted.brn}
-              </p>
-              <p>
-                <span className="font-medium text-navy">담당자:</span>{" "}
-                {submitted.contactName} ({submitted.contactRole})
-              </p>
-              <p>
-                <span className="font-medium text-navy">첨부파일:</span>{" "}
-                {submitted.businessCert.name}
-              </p>
-            </div>
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <button
-                type="button"
-                onClick={() => {
-                  form.reset();
-                  setSubmitted(null);
-                }}
-                className="rounded-md border border-navy/20 px-6 py-2.5 text-sm font-medium text-navy transition-colors hover:bg-navy/5"
-              >
-                다시 입력하기
-              </button>
+              </span>
+              의 가입 신청이 정상 접수되었습니다.
+              <br />
+              관리자 검토 후 영업일 3일 이내에 가입 결과를 안내드립니다.
+              <br />
+              안내는 입력하신 회사 대표 이메일 또는 담당자 이메일로
+              발송됩니다.
+            </p>
+            <div className="mt-8">
               <Link
                 href="/"
-                className="rounded-md bg-teal px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-teal/90"
+                className="inline-block rounded-md bg-teal px-8 py-3 text-sm font-medium text-white transition-colors hover:bg-teal/90"
               >
                 홈으로
               </Link>
@@ -147,6 +154,20 @@ export default function SignupPage() {
 
       {/* 폼 카드 */}
       <div className="mx-auto max-w-2xl px-6 pb-32">
+        {/* 제출 실패 시 상단 에러 패널 */}
+        {submitError && (
+          <div
+            role="alert"
+            className="mb-6 flex items-start gap-3 rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm leading-relaxed text-destructive"
+          >
+            <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
+            <div className="flex-1">
+              <p className="font-medium">가입 신청 처리 중 오류가 발생했습니다</p>
+              <p className="mt-1 text-destructive/85">{submitError}</p>
+            </div>
+          </div>
+        )}
+
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -566,7 +587,7 @@ export default function SignupPage() {
                 disabled={form.formState.isSubmitting}
                 className="w-full rounded-md bg-teal px-6 py-3.5 text-base font-medium text-white transition-colors hover:bg-teal/90 disabled:opacity-50"
               >
-                가입 신청하기
+                {form.formState.isSubmitting ? "처리 중…" : "가입 신청하기"}
               </button>
               <p className="text-center text-xs text-mute">
                 이미 회원이신가요?{" "}

@@ -49,7 +49,9 @@
       "Bash(nslookup kxekmpaovatqctsmgzhu.supabase.co)",
       "Bash(nslookup kxekmpaovatqctsmgzhu.supabase.co 8.8.8.8)",
       "Bash(curl -sS -o /dev/null -w \"REST API: HTTP %{http_code}\\\\n\" -H \"apikey: sb_publishable_u9r_VZ_o36ilSdRSmk1BaA_7aWPuqAf\" https://tcvulknjosxnwyedbtmm.supabase.co/rest/v1/)",
-      "Bash(curl -sS -w \"\\\\nAuth health: HTTP %{http_code}\\\\n\" -H \"apikey: sb_publishable_u9r_VZ_o36ilSdRSmk1BaA_7aWPuqAf\" https://tcvulknjosxnwyedbtmm.supabase.co/auth/v1/health)"
+      "Bash(curl -sS -w \"\\\\nAuth health: HTTP %{http_code}\\\\n\" -H \"apikey: sb_publishable_u9r_VZ_o36ilSdRSmk1BaA_7aWPuqAf\" https://tcvulknjosxnwyedbtmm.supabase.co/auth/v1/health)",
+      "Bash(taskkill //PID 22856 //F)",
+      "Bash(curl -sS -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/signup)"
     ]
   }
 }
