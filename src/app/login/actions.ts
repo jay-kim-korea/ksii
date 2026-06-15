@@ -80,10 +80,8 @@ export async function submitLogin(formData: FormData): Promise<LoginResult> {
     }
   }
 
-  // 5) 성공 — 역할별 리다이렉트
+  // 5) 성공 — 역할 무관하게 홈으로.
+  // 관리자는 헤더의 [관리자 페이지] 버튼으로 어드민 콘솔에 진입.
   // (redirect 는 throw 형태라 함수가 여기서 종료되어 클라이언트로 반환값 안 감)
-  if (profile.role === "admin") {
-    redirect("/admin");
-  }
-  redirect("/"); // 회원 영역 페이지는 후속 작업, 일단 홈으로
+  redirect("/");
 }
