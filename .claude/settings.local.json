@@ -51,7 +51,16 @@
       "Bash(curl -sS -o /dev/null -w \"REST API: HTTP %{http_code}\\\\n\" -H \"apikey: sb_publishable_u9r_VZ_o36ilSdRSmk1BaA_7aWPuqAf\" https://tcvulknjosxnwyedbtmm.supabase.co/rest/v1/)",
       "Bash(curl -sS -w \"\\\\nAuth health: HTTP %{http_code}\\\\n\" -H \"apikey: sb_publishable_u9r_VZ_o36ilSdRSmk1BaA_7aWPuqAf\" https://tcvulknjosxnwyedbtmm.supabase.co/auth/v1/health)",
       "Bash(taskkill //PID 22856 //F)",
-      "Bash(curl -sS -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/signup)"
+      "Bash(curl -sS -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/signup)",
+      "Bash(git commit -m ' *)",
+      "Bash(curl -sS -o /dev/null -w \"Live site: HTTP %{http_code}\\\\n\" https://ksii.netlify.app/)",
+      "Bash(curl -sS -o /dev/null -w \"Live signup: HTTP %{http_code}\\\\n\" https://ksii.netlify.app/signup)",
+      "Bash(curl -sS -o /dev/null -w \"Admin page \\(dev bypass\\): HTTP %{http_code}\\\\n\" http://localhost:3000/admin)",
+      "Bash(curl -sS http://localhost:3000/admin)",
+      "Bash(curl -sS -o /tmp/admin.html -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/admin)",
+      "Bash(curl -sS -o /dev/null -w \"Home: HTTP %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -sS -o /dev/null -w \"Admin: HTTP %{http_code}\\\\n\" http://localhost:3000/admin)",
+      "Bash(curl -sS -o /dev/null -w \"Signup: HTTP %{http_code}\\\\n\" http://localhost:3000/signup)"
     ]
   }
 }

@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckCircle2 } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 
 import { loginSchema, type LoginFormValues } from "@/lib/validation/login";
 import {
@@ -16,64 +16,30 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { submitLogin } from "./actions";
 
 export default function LoginPage() {
-  // Phase 1 — 검증 통과 여부만 표시 (실제 인증 X)
-  const [submittedBrn, setSubmittedBrn] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     mode: "onTouched",
-    defaultValues: { brn: "", password: "" },
+    defaultValues: { identifier: "", password: "" },
   });
 
-  function onSubmit(data: LoginFormValues) {
-    // 비밀번호는 로그에 노출하지 않음
-    console.log("[LOGIN/Phase1] 검증 통과:", {
-      brn: data.brn,
-      password: "[REDACTED]",
-    });
-    setSubmittedBrn(data.brn);
-  }
+  async function onSubmit(data: LoginFormValues) {
+    setSubmitError(null);
 
-  if (submittedBrn) {
-    return (
-      <main className="min-h-screen bg-white">
-        <div className="mx-auto max-w-md px-6 py-32">
-          <div className="rounded-md border border-mute/20 bg-white p-10 text-center md:p-14">
-            <CheckCircle2 className="mx-auto h-14 w-14 text-teal" />
-            <h1 className="mt-6 text-2xl font-bold text-navy md:text-3xl">
-              입력 검증 완료
-            </h1>
-            <p className="mt-4 text-sm text-navy/70 md:text-base">
-              사업자등록번호{" "}
-              <span className="font-medium text-navy">{submittedBrn}</span>
-              로 로그인 시도.
-              <br />
-              실제 인증 처리는 다음 단계(Phase 3)에서 연결됩니다.
-            </p>
-            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <button
-                type="button"
-                onClick={() => {
-                  form.reset();
-                  setSubmittedBrn(null);
-                }}
-                className="rounded-md border border-navy/20 px-6 py-2.5 text-sm font-medium text-navy transition-colors hover:bg-navy/5"
-              >
-                다시 입력하기
-              </button>
-              <Link
-                href="/"
-                className="rounded-md bg-teal px-6 py-2.5 text-sm font-medium text-white transition-colors hover:bg-teal/90"
-              >
-                홈으로
-              </Link>
-            </div>
-          </div>
-        </div>
-      </main>
-    );
+    const fd = new FormData();
+    fd.set("identifier", data.identifier);
+    fd.set("password", data.password);
+
+    // 성공 시 서버에서 redirect되어 이 코드는 도달하지 않음.
+    // 실패 시에만 result 반환.
+    const result = await submitLogin(fd);
+    if (result && !result.ok) {
+      setSubmitError(result.error);
+    }
   }
 
   return (
@@ -91,6 +57,19 @@ export default function LoginPage() {
 
       {/* 폼 카드 */}
       <div className="mx-auto max-w-md px-6 pb-32">
+        {/* 제출 실패 시 상단 에러 패널 */}
+        {submitError && (
+          <div
+            role="alert"
+            className="mb-6 flex items-start gap-3 rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm leading-relaxed text-destructive"
+          >
+            <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
+            <div className="flex-1">
+              <p>{submitError}</p>
+            </div>
+          </div>
+        )}
+
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -99,14 +78,13 @@ export default function LoginPage() {
           >
             <FormField
               control={form.control}
-              name="brn"
+              name="identifier"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>사업자등록번호</FormLabel>
+                  <FormLabel>사업자등록번호 또는 이메일</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="000-00-00000"
-                      inputMode="numeric"
+                      placeholder="000-00-00000 또는 admin@example.com"
                       autoComplete="username"
                       {...field}
                     />
@@ -140,7 +118,7 @@ export default function LoginPage() {
               disabled={form.formState.isSubmitting}
               className="w-full rounded-md bg-teal px-6 py-3.5 text-base font-medium text-white transition-colors hover:bg-teal/90 disabled:opacity-50"
             >
-              로그인
+              {form.formState.isSubmitting ? "로그인 중…" : "로그인"}
             </button>
 
             {/* 하단 보조 링크 */}
